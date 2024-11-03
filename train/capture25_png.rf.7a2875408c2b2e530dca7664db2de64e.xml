@@ -1,0 +1,27 @@
+<annotation>
+	<folder></folder>
+	<filename>capture25_png.rf.7a2875408c2b2e530dca7664db2de64e.jpg</filename>
+	<path>capture25_png.rf.7a2875408c2b2e530dca7664db2de64e.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>specimen_block_red</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>354</xmin>
+			<xmax>374</xmax>
+			<ymin>176</ymin>
+			<ymax>236</ymax>
+		</bndbox>
+	</object>
+</annotation>

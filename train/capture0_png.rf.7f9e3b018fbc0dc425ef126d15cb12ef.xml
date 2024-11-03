@@ -1,0 +1,27 @@
+<annotation>
+	<folder></folder>
+	<filename>capture0_png.rf.7f9e3b018fbc0dc425ef126d15cb12ef.jpg</filename>
+	<path>capture0_png.rf.7f9e3b018fbc0dc425ef126d15cb12ef.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>specimen_block_blue</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>392</xmin>
+			<xmax>416</xmax>
+			<ymin>154</ymin>
+			<ymax>228</ymax>
+		</bndbox>
+	</object>
+</annotation>
