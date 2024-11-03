@@ -1,3 +1,6 @@
+import tarfile
+import os
+
 chosen_model = 'ssd-mobilenet-v2'
 MODELS_CONFIG = {
     'ssd-mobilenet-v2': {
@@ -11,23 +14,22 @@ pretrained_checkpoint = MODELS_CONFIG[chosen_model]['pretrained_checkpoint']
 base_pipeline_file = MODELS_CONFIG[chosen_model]['base_pipeline_file']
 
 # Create "mymodel" folder for pre-trained weights and configuration files
-%cd ~
-%mkdir {HOMEFOLDER}models/mymodel/
-%cd {HOMEFOLDER}models/mymodel/
-%pwd
+os.system("cd ~")
+os.system("mkdir ~/models/mymodel/")
+os.system("cd ~/models/mymodel/")
+os.getcwd()
 
 # Download pre-trained model weights
-import tarfile
 download_tar = 'https://downloads.limelightvision.io/models/' + pretrained_checkpoint
-!wget {download_tar}
+os.system("wget" + download_tar)
 tar = tarfile.open(pretrained_checkpoint)
 tar.extractall()
 tar.close()
 
 # Download training configuration file for model
 download_config = 'https://downloads.limelightvision.io/models/' + base_pipeline_file
-!wget {download_config}
-%cd ~
+os.system("wget" + download_config)
+os.system("cd ~")
 
 # Set training parameters for the model
 num_steps = 40000
