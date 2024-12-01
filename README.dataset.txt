@@ -1,6 +1,6 @@
-# FTC24-25_IntoTheDeep > 2024-10-05 5:29am
-https://universe.roboflow.com/noah-fang/ftc24-25_intothedeep
+# FTC Sample Detector 3 > 2024-09-23 2:26am
+https://universe.roboflow.com/stephens-workspace-dmsjl/ftc-sample-detector-3
 
 Provided by a Roboflow user
-License: MIT
+License: CC BY 4.0
 

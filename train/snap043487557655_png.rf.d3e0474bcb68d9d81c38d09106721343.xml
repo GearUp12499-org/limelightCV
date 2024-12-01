@@ -1,0 +1,27 @@
+<annotation>
+	<folder></folder>
+	<filename>snap043487557655_png.rf.d3e0474bcb68d9d81c38d09106721343.jpg</filename>
+	<path>snap043487557655_png.rf.d3e0474bcb68d9d81c38d09106721343.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>480</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>red</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>146</xmin>
+			<xmax>456</xmax>
+			<ymin>216</ymin>
+			<ymax>405</ymax>
+		</bndbox>
+	</object>
+</annotation>
