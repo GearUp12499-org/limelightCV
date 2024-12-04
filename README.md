@@ -1,6 +1,6 @@
 # 12499 Gear Up 2024-25 Limelight CV Repository
 
-Dependencies
+## Dependencies
 
 ```
 (pip) pycocotools
@@ -10,6 +10,10 @@ Dependencies
 (system) libusb-1.0-0-dev
 ```
 
+## Details
+
 Image Format: `Pascal VOC`
+
 Dataset Source: `Roboflow`
+
 Reccomended Image: `https://hub.docker.com/r/condaforge/miniforge3` 
