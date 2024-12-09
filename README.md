@@ -1,5 +1,7 @@
 # 12499 Gear Up 2024-25 Limelight CV Repository
 
+# Tensorflow
+
 ## Dependencies
 
 ```
@@ -31,3 +33,4 @@ $ apt update
 $ apt install libusb-1.0-0-dev
 $ python construct.py
 ```
+# OpenCV
