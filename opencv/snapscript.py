@@ -1,11 +1,32 @@
 import cv2
 import numpy as np
 
+# global constants go here:
+SAMPLE_DIMENSIONS = {
+    "x": 3.9, # width, in cm
+    "y": 8.9, # height, in cm
+    "z": 3.9, # depth, in cm
+}
+
+FOV = {
+    "x": 59.0, # horizontal field of view, in degrees
+    "y": 49.7, # vertical field of view, in degrees
+}
+
 # global variables go here:
 testVar = 0
 
+# cm to pixels equation
+cm2pix = lambda cm: round(cm * 37.8)
+
 # To change a global variable inside a function,
 # re-declare it with the 'global' keyword
+
+def calculateDistance(Ta) -> float:
+    # calculate distance to target in cm
+    # note from shuban: AI gave me this formula, I want to see if it works
+    return (SAMPLE_DIMENSIONS["x"] * cm2pix(Ta)) / (2 * cm2pix(SAMPLE_DIMENSIONS["y"] * np.tan(np.radians(FOV["y"] / 2))))
+
 def incrementTestVar():
     global testVar
     testVar = testVar + 1
@@ -60,9 +81,12 @@ def runPipeline(image, llrobot):
         cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,255),2)
         llpython = [1,x,y,w,h,9,8,7]  
   
+    Ta = cv2.contourArea(largestContour)
+    print(f"Ta: {Ta}")
+    print(f"Distance to target: {calculateDistance(Ta)}")
     incrementTestVar()
     drawDecorations(image)
-       
+    
     # make sure to return a contour,
     # an image to stream,
     # and optionally an array of up to 8 values for the "llpython"
