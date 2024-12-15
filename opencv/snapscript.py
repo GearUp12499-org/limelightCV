@@ -1,32 +1,37 @@
 import cv2
 import numpy as np
 
-# global constants go here:
+# global constants go here
 SAMPLE_DIMENSIONS = {
-    "x": 3.9, # width, in cm
-    "y": 8.9, # height, in cm
-    "z": 3.9, # depth, in cm
+    "x": 3.9,  # width, in cm
+    "y": 8.9,  # height, in cm
+    "z": 3.9,  # depth, in cm
 }
 
 FOV = {
-    "x": 59.0, # horizontal field of view, in degrees
-    "y": 49.7, # vertical field of view, in degrees
+    "x": 59.0,  # horizontal field of view, in degrees
+    "y": 49.7,  # vertical field of view, in degrees
 }
 
-# global variables go here:
-testVar = 0
-
-# cm to pixels equation
+# cm2pix formula
 cm2pix = lambda cm: round(cm * 37.8)
+
+# calculate distance to target
+def calculateDistance(w, h) -> float:
+    # focal length in the x and y direction
+    focal_length_x = SAMPLE_DIMENSIONS["x"] * 37.8 / (2 * np.tan(np.radians(FOV["x"] / 2)))
+    focal_length_y = SAMPLE_DIMENSIONS["y"] * 37.8 / (2 * np.tan(np.radians(FOV["y"] / 2)))
+    
+    # calculate distance based on width and height
+    distance_x = (SAMPLE_DIMENSIONS["x"] * focal_length_x) / w
+    distance_y = (SAMPLE_DIMENSIONS["y"] * focal_length_y) / h
+    
+    distance = (distance_x + distance_y) / 2
+    
+    return distance
 
 # To change a global variable inside a function,
 # re-declare it with the 'global' keyword
-
-def calculateDistance(Ta) -> float:
-    # calculate distance to target in cm
-    # note from shuban: AI gave me this formula, I want to see if it works
-    return (SAMPLE_DIMENSIONS["x"] * cm2pix(Ta)) / (2 * cm2pix(SAMPLE_DIMENSIONS["y"] * np.tan(np.radians(FOV["y"] / 2))))
-
 def incrementTestVar():
     global testVar
     testVar = testVar + 1
@@ -42,7 +47,7 @@ def drawDecorations(image):
         (0, 230), 
         cv2.FONT_HERSHEY_SIMPLEX, 
         .5, (0, 255, 0), 1, cv2.LINE_AA)
-    
+
 # runPipeline() is called every frame by Limelight's backend.
 def runPipeline(image, llrobot):
     img_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -59,34 +64,35 @@ def runPipeline(image, llrobot):
     mask1 = cv2.inRange(img_hsv, lower_red, upper_red)
 
     # join my masks
-    red = mask0+mask1
+    red = mask0 + mask1
 
     # Reduce noise
-    kernel = np.ones((7,7), np.uint8)
+    kernel = np.ones((7, 7), np.uint8)
     red = cv2.morphologyEx(red, cv2.MORPH_CLOSE, kernel)
     red = cv2.morphologyEx(red, cv2.MORPH_OPEN, kernel)
-    
 
     contours, _ = cv2.findContours(red, 
     cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-  
+
     largestContour = np.array([[]])
-    llpython = [0,0,0,0,0,0,0,0]
+    llpython = [0, 0, 0, 0, 0, 0, 0, 0]
 
     if len(contours) > 0:
         cv2.drawContours(image, contours, -1, 255, 2)
         largestContour = max(contours, key=cv2.contourArea)
-        x,y,w,h = cv2.boundingRect(largestContour)
+        
+        if largestContour.size > 0:  # Check if the largest contour is valid
+            x, y, w, h = cv2.boundingRect(largestContour)
+            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 255), 2)
+            llpython = [1, x, y, w, h, 9, 8, 7]
 
-        cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,255),2)
-        llpython = [1,x,y,w,h,9,8,7]  
-  
-    Ta = cv2.contourArea(largestContour)
-    print(f"Ta: {Ta}")
-    print(f"Distance to target: {calculateDistance(Ta)}")
+            # Calculate distance based on width and height of the bounding box
+            distance = calculateDistance(w, h)
+            print(f"Distance to target: {distance} cm")
+    
     incrementTestVar()
     drawDecorations(image)
-    
+
     # make sure to return a contour,
     # an image to stream,
     # and optionally an array of up to 8 values for the "llpython"
