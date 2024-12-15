@@ -46,7 +46,7 @@ model = object_detector.create(
 	train_whole_model=True,
 	epochs=20,
 	validation_data=valid_dataset,
-    model_spec=spec
+    	model_spec=spec
 )
 
 # Evaluate the Model and Export it as a  .TFLite file for use on the SDK
