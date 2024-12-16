@@ -9,18 +9,18 @@ SAMPLE_DIMENSIONS = {
 }
 
 FOV = {
-    "x": 59.0,  # horizontal field of view, in degrees
-    "y": 49.7,  # vertical field of view, in degrees
+    "x": 54.5,  # horizontal field of view, in degrees
+    "y": 42.0,  # vertical field of view, in degrees
 }
 
-# cm2pix formula
-cm2pix = lambda cm: round(cm * 37.8)
+# centimeter to pixel formula
+pixel = lambda cm: cm * 37.8
 
 # calculate distance to target
 def calculateDistance(w, h) -> float:
     # focal length in the x and y direction
-    focal_length_x = SAMPLE_DIMENSIONS["x"] * 37.8 / (2 * np.tan(np.radians(FOV["x"] / 2)))
-    focal_length_y = SAMPLE_DIMENSIONS["y"] * 37.8 / (2 * np.tan(np.radians(FOV["y"] / 2)))
+    focal_length_x = pixel(SAMPLE_DIMENSIONS["x"]) / (2 * np.tan(np.radians(FOV["x"] / 2)))
+    focal_length_y = pixel(SAMPLE_DIMENSIONS["y"]) / (2 * np.tan(np.radians(FOV["y"] / 2)))
     
     # calculate distance based on width and height
     distance_x = (SAMPLE_DIMENSIONS["x"] * focal_length_x) / w
@@ -81,12 +81,12 @@ def runPipeline(image, llrobot):
         cv2.drawContours(image, contours, -1, 255, 2)
         largestContour = max(contours, key=cv2.contourArea)
         
-        if largestContour.size > 0:  # Check if the largest contour is valid
+        if largestContour.size > 0:  # check if the largest contour is valid
             x, y, w, h = cv2.boundingRect(largestContour)
             cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 255), 2)
             llpython = [1, x, y, w, h, 9, 8, 7]
 
-            # Calculate distance based on width and height of the bounding box
+            # calculate distance based on width and height of the bounding box
             distance = calculateDistance(w, h)
             print(f"Distance to target: {distance} cm")
     
