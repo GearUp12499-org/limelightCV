@@ -42,11 +42,13 @@ def incrementTestVar():
         testVar = 0
 
 def drawDecorations(image):
-    cv2.putText(image, 
+    cv2.putText(
+        image, 
         'Limelight python script!', 
         (0, 230), 
         cv2.FONT_HERSHEY_SIMPLEX, 
-        .5, (0, 255, 0), 1, cv2.LINE_AA)
+        .5, (0, 255, 0), 1, cv2.LINE_AA
+    )
 
 # runPipeline() is called every frame by Limelight's backend.
 def runPipeline(image, llrobot):
