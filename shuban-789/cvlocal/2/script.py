@@ -2,6 +2,12 @@ import numpy as np
 import cv2
 import sys
 
+# CONSTANTS
+PICKUP_CENTER = ()
+
+def calculateContourPickupCenter(countours) -> tuple:
+    return (0, 0)
+
 def runPipeline(image, llrobot):
     llpython = [0.0] * 8
     
@@ -85,6 +91,8 @@ def runPipeline(image, llrobot):
             subc_box = np.intp(subc_box)
 
             cv2.drawContours(image, [subc_box], 0, (0,255,0), 2)
+            
+        allContours = contours + sub_contours
         
     cv2.imshow('original', image)
     cv2.imshow('hsv', hsv)

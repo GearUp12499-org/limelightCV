@@ -3,7 +3,7 @@
 import cv2
 import script
 
-image = cv2.imread("../images/mixed/pic110.png")
+image = cv2.imread("../images/mixed/pic103.png")
 llrobot = [0.0] * 8
 
 _, _, llpython = script.runPipeline(image, llrobot)
@@ -12,3 +12,8 @@ print(llpython)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+# Check -->
+# pic108.png
+# pic113.png
+# pic115.png
