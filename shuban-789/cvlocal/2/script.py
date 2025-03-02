@@ -4,6 +4,7 @@ import sys
 
 # CONSTANTS
 PICKUP_CENTER = ()
+image = cv2.imread("../images/mixed/pic103.png")
 
 def calculateContourPickupCenter(countours) -> tuple:
     return (0, 0)
@@ -14,7 +15,6 @@ def runPipeline(image, llrobot):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     yellow_lower = np.array([20, 100, 100], dtype="uint8")
     yellow_upper = np.array([40, 255, 255], dtype="uint8")
-
 
 
     mask = cv2.inRange(hsv, yellow_lower, yellow_upper)
@@ -61,7 +61,7 @@ def runPipeline(image, llrobot):
 
         # Lines stuff
         edges = cv2.Canny(submask, 10, 100)
-        cv2.imshow('edges', edges)
+        #cv2.imshow('edges', edges)
         lsd = cv2.createLineSegmentDetector(0)
         lines = lsd.detect(edges)[0]
 
@@ -70,7 +70,7 @@ def runPipeline(image, llrobot):
             x1, y1, x2, y2 = map(int, line[0])
             cv2.line(line_img, (x1, y1), (x2,y2), 255, 5)
 
-        cv2.imshow("lines", line_img)
+        #cv2.imshow("lines", line_img)
         # End of lines stuff
 
         # sub_contours, _ = cv2.findContours(line_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -80,22 +80,50 @@ def runPipeline(image, llrobot):
         for _ in range(10):
             submask = cv2.erode(submask, kernel)
             sub_contours, _ = cv2.findContours(submask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            if len(sub_contours) > 1:
-                break
+            foundOne = False
             
+            for c in sub_contours:
+                x, y, w, h, angle = calcRectValues(c)
+                rect = cv2.minAreaRect(c)
+                subc_box = cv2.boxPoints(rect)
+                subc_box = np.intp(subc_box)
+                rw = w / target_w
+                rh = h / target_h
+
+                if rw > 0.6 and rw < 1.15 and rh > 0.6 and rh < 1.15:
+                    cv2.drawContours(image, [subc_box], 0, (0,255,0), 2)
+                    foundOne = True
+                    continue
+                
+                # submask2 = cv2.erode(submask, kernel)
+            # if foundOne:
+            #     break
         cv2.imshow("erode", submask)
         
-        for sub_contour in sub_contours:
-            rect = cv2.minAreaRect(sub_contour)
-            subc_box = cv2.boxPoints(rect)
-            subc_box = np.intp(subc_box)
-
-            cv2.drawContours(image, [subc_box], 0, (0,255,0), 2)
+        # for sub_contour in sub_contours:
+        #     rect = cv2.minAreaRect(sub_contour)
+        #     subc_box = cv2.boxPoints(rect)
+        #     subc_box = np.intp(subc_box)
             
-        allContours = contours + sub_contours
+        #     cv2.drawContours(image, [subc_box], 0, (0,255,0), 2)
+            
+        # allContours = contours + sub_contours
         
     cv2.imshow('original', image)
     cv2.imshow('hsv', hsv)
-    cv2.imshow('mask', mask)
+    #cv2.imshow('mask', mask)
 
     return None, image, llpython
+
+runPipeline(image, [0.0] * 8)
+
+def calcRectValues(contour):
+    rect = cv2.minAreaRect(contour)
+    x, y = rect[0]
+    w, h = rect[1]
+    angle = rect[2]
+
+    if w > h:
+        w, h = h, w
+        angle += 90
+    return x, y, w, h, angle

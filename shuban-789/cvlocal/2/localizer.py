@@ -3,7 +3,7 @@
 import cv2
 import script
 
-image = cv2.imread("../images/mixed/pic103.png")
+image = cv2.imread("../images/mixed/pic108.png")
 llrobot = [0.0] * 8
 
 _, _, llpython = script.runPipeline(image, llrobot)
