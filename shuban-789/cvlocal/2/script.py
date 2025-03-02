@@ -4,7 +4,6 @@ import sys
 
 # CONSTANTS
 PICKUP_CENTER = ()
-image = cv2.imread("../images/mixed/pic103.png")
 
 def calculateContourPickupCenter(countours) -> tuple:
     return (0, 0)
