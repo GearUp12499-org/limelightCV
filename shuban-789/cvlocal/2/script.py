@@ -80,7 +80,12 @@ def runPipeline(image, llrobot):
         cv2.imshow("erode", submask)
         
         cv2.drawContours(image, [box], 0, (0,255,255), 2)
-        
+        for sub_contour in sub_contours:
+            rect = cv2.minAreaRect(sub_contour)
+            subc_box = cv2.boxPoints(rect)
+            subc_box = np.intp(box)
+
+            cv2.drawContours(image, [subc_box], 0, (0,255,0), 2)
         
     cv2.imshow('original', image)
     cv2.imshow('hsv', hsv)
