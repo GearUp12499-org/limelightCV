@@ -4,7 +4,7 @@ import script
 import cv2
 
 category = "mixed"
-image = cv2.imread("images/" + category + "/" + "pic110.png")
+image = cv2.imread("../images/" + category + "/" + "pic110.png")
 result = script.runPipeline(image, [0.0, 1.0, 0.0])
 cv2.imshow("Result", result[1])
 print("X:", result[2][1])
