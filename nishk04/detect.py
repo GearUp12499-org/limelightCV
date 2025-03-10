@@ -68,7 +68,7 @@ def detect(img, color):
     #    
     samples_found = []
     rect_vals = []
-    #print("color = ", color)
+    # print("color = ", color)
 
     # convert to hsv
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -133,7 +133,7 @@ def detect(img, color):
         # if it is "just right", record it in samples_found[]
         if ratio_w > .75 and ratio_w < 1.25 and ratio_h > .75 and ratio_h < 1.25:
             cv2.drawContours(img, [box], 0, (0, 255, 0), 2) # green contour
-            rect_vals.append((x, y, w, h, angle, box))
+            rect_vals = [x, y, w, h, angle, box]
             # distance from center of image to center of sample
             dist = math.sqrt((x - center_x)**2 + (y - center_y) **2)
             samples_found.append((dist, x, y, angle))
@@ -147,6 +147,7 @@ def detect(img, color):
         submask = np.zeros_like(mask)
         cv2.drawContours(submask, [box], -1, 1, cv2.FILLED)
         submask = submask * mask
+        cv2.imshow('submask debug', submask)
 
         kernel = np.ones((5, 5), np.uint8)
         for _ in range(15):
@@ -167,7 +168,7 @@ def detect(img, color):
 
                 if rw > 0.5 and rw < 1.2 and rh > 0.5 and rh < 1.2:
                     cv2.drawContours(img, [box], 0, (255, 0, 0), 2) # blue contour
-                    rect_vals.append((x, y, w, h, angle, box))
+                    rect_vals = [x, y, w, h, angle, box]
                     dist = math.sqrt((x - center_x)**2 + (y - center_y) **2)
                     samples_found.append((dist, x, y, angle))
                     foundOne = True
@@ -226,15 +227,15 @@ def runPipeline(img, llrobot):
         return np.array([[]]), img, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]        
 
     except Exception as e:
-        print(e)
-        return np.array([[]]), img, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        raise e
+        # return np.array([[]]), img, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 # The detect program only picks out the first number for color given in the llrobot array and the rest are ignored
-for img in os.listdir("D:/Gear Up/limelightCV/nishk04/images"):
+for img in ["pic142.png"]:
     print(img)
-    img = cv2.imread("D:/Gear Up/limelightCV/nishk04/images/" + img)
-    _, _, llpython = runPipeline(img, [0.0, 0.0, 1.0]) # Yellow - Blue - Red
-    #print(llpython[:4])
+    img = cv2.imread("images/" + img)
+    _, _, llpython = runPipeline(img, [1.0, 0.0, 0.0]) # Yellow - Blue - Red
+    print(llpython[:4])
     key = cv2.waitKey(0)
     cv2.destroyAllWindows()
     if key == 27: # ESC key
