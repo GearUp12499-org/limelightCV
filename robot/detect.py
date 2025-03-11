@@ -5,9 +5,16 @@ import math
 import os
 
 
+# CONSTATS GO HERE
 YELLOW = 0
 RED = 1
 BLUE = 2
+
+# CENTER_X = 320
+# CENTER_Y = 320
+
+# CONVERSIONS GO HERE
+inches2px = lambda inches: inches * 96
 
 def pickupable(x, y, w, h, angle):
         if w > h:
@@ -15,8 +22,9 @@ def pickupable(x, y, w, h, angle):
             angle += 90
         ta = w * h
         # Check if the point is inside the rotated rect
-        camMidpoint = (640//2, 480//2)
-        #Step 1: translate the rect so the center is (0, 0)
+        # Offset the y-axis by 0.75 inches to account for difference in the distance from the camera to the pickup
+        camMidpoint = (320, 320 + inches2px(0.75))
+        # Step 1: translate the rect so the center is (0, 0)
         point = (camMidpoint[0] - x, camMidpoint[1] - y)
 
         # Step 2: rotate everything by -angle around (0, 0)
@@ -27,8 +35,8 @@ def pickupable(x, y, w, h, angle):
         )
         xprime = point[0]
         yprime = point[1]
-        height = int(.48 * 480)
-        width = int(.23 * 480)
+        height = int(.48 * 480 * 0.9)
+        width = int(.23 * 480 * 0.9)
 
         # Step 3: check if the point is within the bounds of the non-rotated rect
         inside = False
@@ -99,8 +107,8 @@ def detect(img, color):
     target_h = int(.48 * height)   #  / 480
     target_w = int(.23 * height)   # 
 
-    center_x = width / 2
-    center_y = height / 2
+    center_x = 320
+    center_y = 320
 
     
     # find contours in the mask
@@ -181,6 +189,7 @@ def detect(img, color):
 def runPipeline(img, llrobot):
     # First look for a yellow, then look for the team color
     # rectSutff = [x, y, w, h, angle, box]
+    # llrobot = [1.0, 0.0, 0.0]
     try:
         if llrobot[0] > .5:
             xOff, yOff, angle, rectStuff = detect(img, YELLOW) # Use rectStuff to see if the sample is pickupable
@@ -188,6 +197,7 @@ def runPipeline(img, llrobot):
                 # isPickupable(x, y, w, h, angle)
                 isPickupable = pickupable(rectStuff[0], rectStuff[1], rectStuff[2], rectStuff[3], rectStuff[4])
                 returnType = 2.0 if isPickupable else 1.0
+                # print([returnType, xOff, yOff, angle])
                 return np.array([[]]), img, [returnType, xOff, yOff, angle, 0.0, 0.0, 0.0, 0.0]
             
         if llrobot[1] > .5:
