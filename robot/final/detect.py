@@ -5,6 +5,7 @@ import math
 import os
 
 
+# CONSTATS GO HERE
 YELLOW = 0
 RED = 1
 BLUE = 2
@@ -12,14 +13,18 @@ BLUE = 2
 # CENTER_X = 320
 # CENTER_Y = 320
 
+# CONVERSIONS GO HERE
+inches2px = lambda inches: inches * 96
+
 def pickupable(x, y, w, h, angle):
         if w > h:
             w, h = h, w
             angle += 90
         ta = w * h
         # Check if the point is inside the rotated rect
-        camMidpoint = (320, 320)
-        #Step 1: translate the rect so the center is (0, 0)
+        # Offset the y-axis by 0.75 inches to account for difference in the distance from the camera to the pickup
+        camMidpoint = (320, 320 + inches2px(0.75))
+        # Step 1: translate the rect so the center is (0, 0)
         point = (camMidpoint[0] - x, camMidpoint[1] - y)
 
         # Step 2: rotate everything by -angle around (0, 0)
@@ -30,8 +35,8 @@ def pickupable(x, y, w, h, angle):
         )
         xprime = point[0]
         yprime = point[1]
-        height = int(.48 * 480)
-        width = int(.23 * 480)
+        height = int(.48 * 480 * 0.9)
+        width = int(.23 * 480 * 0.9)
 
         # Step 3: check if the point is within the bounds of the non-rotated rect
         inside = False
