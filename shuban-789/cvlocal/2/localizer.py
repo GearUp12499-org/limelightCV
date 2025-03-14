@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import cv2
-import script
+import detect as script
 
 image = cv2.imread("../images/mixed/pic115.png")
 llrobot = [0.0] * 8
