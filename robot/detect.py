@@ -18,8 +18,9 @@ BLUE = 2
 inches2px = lambda inches: inches * 72.85714286
 
 def pickupable2(box):
-    cv2.pointPolygonTest(box, (320, 320), True)
-    return distance > 30
+    midpoint = (320, 320 - inches2px(0.75))
+    dist = cv2.pointPolygonTest(box, midpoint, True)
+    return dist > 30
 
 def pickupable(x, y, w, h, angle):
         if w > h:
@@ -199,7 +200,8 @@ def runPipeline(img, llrobot):
             xOff, yOff, angle, rectStuff = detect(img, YELLOW) # Use rectStuff to see if the sample is pickupable
             if xOff is not None:
                 # isPickupable(x, y, w, h, angle)
-                isPickupable = pickupable(rectStuff[0], rectStuff[1], rectStuff[2], rectStuff[3], rectStuff[4])
+                box = rectStuff[5]
+                isPickupable = pickupable2(box)
                 returnType = 2.0 if isPickupable else 1.0
                 # print([returnType, xOff, yOff, angle])
                 return np.array([[]]), img, [returnType, xOff, yOff, angle, 0.0, 0.0, 0.0, 0.0]
@@ -207,14 +209,16 @@ def runPipeline(img, llrobot):
         if llrobot[1] > .5:
             xOff, yOff, angle, rectStuff = detect(img, RED)
             if xOff is not None:
-                isPickupable = pickupable(rectStuff[0], rectStuff[1], rectStuff[2], rectStuff[3], rectStuff[4])
+                box = rectStuff[5]
+                isPickupable = pickupable2(box)
                 returnType = 2.0 if isPickupable else 1.0
                 return np.array([[]]), img, [returnType, xOff, yOff, angle, 0.0, 0.0, 0.0, 0.0]
                      
         if llrobot[2] > .5:
             xOff, yOff, angle, rectStuff = detect(img, BLUE)
             if xOff is not None:
-                isPickupable = pickupable(rectStuff[0], rectStuff[1], rectStuff[2], rectStuff[3], rectStuff[4])
+                box = rectStuff[5]
+                isPickupable = pickupable2(box)
                 returnType = 2.0 if isPickupable else 1.0
                 return np.array([[]]), img, [returnType, xOff, yOff, angle, 0.0, 0.0, 0.0, 0.0]
 
