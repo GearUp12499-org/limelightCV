@@ -16,6 +16,10 @@ BLUE = 2
 # CONVERSIONS GO HERE
 inches2px = lambda inches: inches * 96
 
+def pickupable2(box):
+    cv2.pointPolygonTest(box, (320, 320), True)
+    return distance > 30
+
 def pickupable(x, y, w, h, angle):
         if w > h:
             w, h = h, w
