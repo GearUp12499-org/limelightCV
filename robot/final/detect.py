@@ -14,7 +14,12 @@ BLUE = 2
 # CENTER_Y = 320
 
 # CONVERSIONS GO HERE
-inches2px = lambda inches: inches * 96
+# value from pic125.png
+inches2px = lambda inches: inches * 72.85714286
+
+def pickupable2(box):
+    cv2.pointPolygonTest(box, (320, 320), True)
+    return distance > 30
 
 def pickupable(x, y, w, h, angle):
         if w > h:
@@ -23,7 +28,7 @@ def pickupable(x, y, w, h, angle):
         ta = w * h
         # Check if the point is inside the rotated rect
         # Offset the y-axis by 0.75 inches to account for difference in the distance from the camera to the pickup
-        camMidpoint = (320, 320 + inches2px(0.75))
+        camMidpoint = (320, 320 - inches2px(0.75))
         # Step 1: translate the rect so the center is (0, 0)
         point = (camMidpoint[0] - x, camMidpoint[1] - y)
 
@@ -108,8 +113,7 @@ def detect(img, color):
     target_w = int(.23 * height)   # 
 
     center_x = 320
-    center_y = 320
-
+    center_y = 320 - inches2px(0.75)
     
     # find contours in the mask
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -158,7 +162,7 @@ def detect(img, color):
                 rw = w / target_w
                 rh = h / target_h
 
-                if rw > 0.5 and rw < 1.2 and rh > 0.5 and rh < 1.2:
+                if 0.5 < rw < 1.2 and 0.5 < rh < 1.2:
                     rect_vals = [x, y, w, h, angle, box]
                     dist = math.sqrt((x - center_x)**2 + (y - center_y) **2)
                     samples_found.append((dist, x, y, angle, rect_vals))
