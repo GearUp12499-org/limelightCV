@@ -57,6 +57,7 @@ def calcRectValues(contour):
     rect = cv2.minAreaRect(contour)
     box = cv2.boxPoints(rect)
     box = np.intp(box)
+    cv2.drawContours(img, [box], 0, (255, 0, 255), 2)
     x, y = rect[0]
     w, h = rect[1]
     angle = rect[2]
@@ -135,17 +136,21 @@ def detect(img, color):
 
         # if it is "just right", record it in samples_found[]
         if ratio_w > .75 and ratio_w < 1.25 and ratio_h > .75 and ratio_h < 1.25:
+            cv2.drawContours(img, [box], 0, (0, 255, 0), 2)
             rect_vals = [x, y, w, h, angle, box]
             # distance from center of image to center of sample
             dist = math.sqrt((x - center_x)**2 + (y - center_y) **2)
             samples_found.append((dist, x, y, angle, rect_vals))
             continue
 
+
+        cv2.drawContours(img, [box], 0, (255, 255, 0), 2)
         # for big contours (> 1.25), pull of the submask covered by this
         # contour and look further
         submask = np.zeros_like(mask)
         cv2.drawContours(submask, [box], -1, 1, cv2.FILLED)
         submask = submask * mask
+        cv2.imshow('submask debug', submask)
 
         kernel = np.ones((5, 5), np.uint8)
         for _ in range(15):
@@ -165,6 +170,7 @@ def detect(img, color):
 
                 if 0.5 < rw < 1.2 and 0.5 < rh < 1.2:
                     rect_vals = [x, y, w, h, angle, box]
+                    cv2.drawContours(img, [box], 0, (255, 0, 0), 2)
                     dist = math.sqrt((x - center_x)**2 + (y - center_y) **2)
                     samples_found.append((dist, x, y, angle, rect_vals))
                     foundOne = True
@@ -172,6 +178,9 @@ def detect(img, color):
             # once we have found a good sample, stop eroding
             if foundOne:
                 break
+
+    cv2.imshow('orig', img)
+    cv2.imshow('mask', mask)
 
     if len(samples_found) == 0:
         return None, None, None, None
@@ -236,3 +245,12 @@ def runPipeline(img, llrobot):
 # Yellow Test Cases to Fix: 109, 104, 113, 122(js move the bobot), 123, 126, 131, 134
 # Red Test Cases to Fix: 122
 # Blue Test Cases to Fix: none, really
+
+img = cv2.imread("../images/mixed/pic113.png")
+_, img, llpython = runPipeline(img, [1.0, 0.0, 0.0])
+
+print(llpython[:4])
+
+cv2.imshow("img", img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
